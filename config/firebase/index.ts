@@ -1,4 +1,6 @@
 import firebase from "firebase/app";
+import "firebase/auth";
+
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
@@ -8,7 +10,8 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_APP_ID,
   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID,
 };
-
-export default firebase.getApps().length
-  ? firebase.getApp()
+const Firebase = firebase.apps.length
+  ? firebase.app()
   : firebase.initializeApp(firebaseConfig);
+export const auth = firebase.auth();
+export default Firebase;
