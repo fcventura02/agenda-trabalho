@@ -45,7 +45,7 @@ const Home: NextPage = () => {
   };
   return (
     <>
-      <Container maxW="960px" p={4} centerContent>
+      <Container maxW="960px" minH="100vh" p={4} centerContent justifyContent="center">
         <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
         <Box mt={12}>
           <Text>Crie sua agenda compartilhada</Text>

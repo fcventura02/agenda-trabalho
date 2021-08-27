@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import * as yup from "yup";
-import firebase from "../config/firebase";
+import firebase, { persistenceMode } from "../config/firebase";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,
@@ -33,14 +33,22 @@ const Home: NextPage = () => {
   const login = async (email: string, password: string) => {
     try {
       const user = firebase.auth().signInWithEmailAndPassword(email, password);
+      firebase.auth().setPersistence(persistenceMode);
       return user;
     } catch (error) {
       return error.message;
     }
   };
+
   return (
     <>
-      <Container maxW="960px" p={4} centerContent>
+      <Container
+        maxW="960px"
+        minH="100vh"
+        p={4}
+        centerContent
+        justifyContent="center"
+      >
         <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
         <Box mt={12}>
           <Text>Crie sua agenda compartilhada</Text>
@@ -55,7 +63,7 @@ const Home: NextPage = () => {
             onSubmit={(values: Values, actions: FormikHelpers<Values>) => {
               login(values.email, values.password)
                 .then((res) => {
-                  console.log(res);
+                  console.log(res.user);
                 })
                 .catch((error) => console.error(error.message));
             }}
