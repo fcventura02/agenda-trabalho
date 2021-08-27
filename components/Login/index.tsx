@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import * as yup from "yup";
-import firebase, { persistenceMode } from "../../config/firebase/client";
+import { firebaseClient, persistenceMode } from "../../config/firebase";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,
@@ -32,8 +32,8 @@ interface Values {
 export const Login: NextPage = () => {
   const login = async (email: string, password: string) => {
     try {
-      const user = firebase.auth().signInWithEmailAndPassword(email, password);
-      firebase.auth().setPersistence(persistenceMode);
+      const user = firebaseClient.auth().signInWithEmailAndPassword(email, password);
+      firebaseClient.auth().setPersistence(persistenceMode);
       return user;
     } catch (error) {
       return error.message;
