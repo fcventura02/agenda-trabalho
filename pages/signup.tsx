@@ -1,6 +1,5 @@
 /* eslint-disable react/no-children-prop */
 import type { NextPage } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import * as yup from "yup";
 import firebase from "../config/firebase";
@@ -13,29 +12,35 @@ import {
   FormLabel,
   Input,
   FormHelperText,
+  InputLeftAddon,
+  InputGroup,
   Button,
 } from "@chakra-ui/react";
-
+import Link from "next/link";
 const validationSchema = yup.object().shape({
   email: yup
     .string()
     .email("E-mail inválido")
     .required("Preenchimento Obrigatório"),
   password: yup.string().required("Preenchimento Obrigatório"),
+  user: yup.string().required("Preenchimento Obrigatório"),
 });
 
 interface Values {
   email: "";
   password: "";
+  user: "";
 }
 
 const Home: NextPage = () => {
-  const login = async (email: string, password: string) => {
+  const signup = async (email: string, password: string) => {
     try {
-      const user = firebase.auth().signInWithEmailAndPassword(email, password);
+      const user = firebase
+        .auth()
+        .createUserWithEmailAndPassword(email, password);
       return user;
     } catch (error) {
-      return error.message;
+      console.log(error.message);
     }
   };
   return (
@@ -51,9 +56,10 @@ const Home: NextPage = () => {
             initialValues={{
               email: "",
               password: "",
+              user: "",
             }}
             onSubmit={(values: Values, actions: FormikHelpers<Values>) => {
-              login(values.email, values.password)
+              signup(values.email, values.password)
                 .then((res) => {
                   console.log(res);
                 })
@@ -101,6 +107,23 @@ const Home: NextPage = () => {
                     </FormHelperText>
                   )}
                 </FormControl>
+                <FormControl id="user" pt={4} pb={4} isRequired>
+                  <InputGroup size="lg">
+                    <InputLeftAddon children="clocker.com/" />
+                    <Input
+                      name="user"
+                      type="text"
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.user}
+                    />
+                  </InputGroup>
+                  {touched.user && (
+                    <FormHelperText textColor="#e74c3c">
+                      {errors.user}
+                    </FormHelperText>
+                  )}
+                </FormControl>
                 <Button
                   type="submit"
                   width="100%"
@@ -114,7 +137,7 @@ const Home: NextPage = () => {
           </Formik>
         </Box>
         <Box mt={12}>
-          <Link href="/signup">Ainda não tem uma conta? Cadastre-se.</Link>
+          <Link href="/">Já possui uma conta? Acesse.</Link>
         </Box>
       </Container>
     </>
