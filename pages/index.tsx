@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {} from "firebase";
 import { Login, Agenda } from "../components";
-import firebase from "../config/firebase";
+import { firebaseClient } from "../config/firebase";
 import { Container, Spinner } from "@chakra-ui/react";
 
 interface Istate {
@@ -16,7 +16,7 @@ export default function Home() {
   });
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user) => {
+    firebaseClient.auth().onAuthStateChanged((user) => {
       setAuth({
         loading: false,
         user,
@@ -26,12 +26,8 @@ export default function Home() {
 
   if (auth.loading) {
     return (
-      <Container
-        minH="100vh"
-        centerContent
-        justifyContent="center"
-      >
-        <Spinner w={100} h={100}/>
+      <Container minH="100vh" centerContent justifyContent="center">
+        <Spinner w={100} h={100} />
       </Container>
     );
   }

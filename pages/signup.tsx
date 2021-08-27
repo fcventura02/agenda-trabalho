@@ -2,7 +2,7 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 import * as yup from "yup";
-import firebase from "../config/firebase";
+import { firebaseClient } from "../config/firebase";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,
@@ -35,7 +35,7 @@ interface Values {
 const Home: NextPage = () => {
   const signup = async (email: string, password: string) => {
     try {
-      const user = firebase
+      const user = firebaseClient
         .auth()
         .createUserWithEmailAndPassword(email, password);
       return user;
@@ -45,7 +45,13 @@ const Home: NextPage = () => {
   };
   return (
     <>
-      <Container maxW="960px" minH="100vh" p={4} centerContent justifyContent="center">
+      <Container
+        maxW="960px"
+        minH="100vh"
+        p={4}
+        centerContent
+        justifyContent="center"
+      >
         <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
         <Box mt={12}>
           <Text>Crie sua agenda compartilhada</Text>

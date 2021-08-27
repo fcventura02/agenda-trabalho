@@ -3,7 +3,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import * as yup from "yup";
-import firebase, { persistenceMode } from "../../config/firebase";
+import firebase, { persistenceMode } from "../../config/firebase/client";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,

@@ -1,11 +1,11 @@
 import { Button, Container } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import firebase from "../../config/firebase";
+import { firebaseClient } from "../../config/firebase";
 import Head from "next/head";
 import Image from "next/image";
 
 export const Agenda: NextPage = () => {
-  const logout = ()=>firebase.auth().signOut()
+  const logout = () => firebaseClient.auth().signOut();
   return (
     <>
       <Head>
@@ -19,7 +19,7 @@ export const Agenda: NextPage = () => {
         justifyContent="center"
       >
         <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
-      <Button onClick={logout}>Sair</Button>
+        <Button onClick={logout}>Sair</Button>
       </Container>
     </>
   );
