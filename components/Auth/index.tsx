@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import type { NextPage } from "next";
 import { firebaseClient, persistenceMode } from "../../config/firebase";
+import axios from "axios";
 
 interface Istate {
   loading: boolean;
@@ -16,12 +17,12 @@ export const useAuth = () => {
 
 export const login = async (email: string, password: string) => {
   try {
-    const user = await firebaseClient
-      .auth()
-      .signInWithEmailAndPassword(email, password);
+    await firebaseClient.auth().signInWithEmailAndPassword(email, password);
     firebaseClient.auth().setPersistence(persistenceMode);
+    return firebaseClient.auth().currentUser;
   } catch (error) {
     console.error("Login: ", error.message);
+    return null;
   }
 };
 
@@ -35,21 +36,21 @@ export const signup = async (
   username: string
 ) => {
   try {
-    const user = await firebaseClient
-      .auth()
-      .createUserWithEmailAndPassword(email, password);
-    login(email, password);
+    await firebaseClient.auth().createUserWithEmailAndPassword(email, password);
+    const user = await login(email, password);
+    const token = await user?.getIdToken();
     //setupProfile(token, username)
-    /* 		const { data } = await axios({
-			method: "post",
-			url: "/api/profile",
-			data: {
-				username: values.user,
-			},
-			headers: {
-				Authentication: `Bearer ${res.user.getToken()}`,
-			},
-		}); */
+    const { data } = await axios({
+      method: "post",
+      url: "/api/profile",
+      data: {
+        username,
+      },
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(data);
     return user;
   } catch (error) {
     console.error("Signup: ", error.message);
