@@ -1,8 +1,11 @@
 /* eslint-disable react/no-children-prop */
-import type { NextPage } from "next";
-import Image from "next/image";
 import * as yup from "yup";
-import { firebaseClient } from "../config/firebase";
+import type { NextPage } from "next";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useAuth } from "../components";
+import { useEffect } from "react";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,
@@ -16,7 +19,6 @@ import {
   InputGroup,
   Button,
 } from "@chakra-ui/react";
-import Link from "next/link";
 const validationSchema = yup.object().shape({
   email: yup
     .string()
@@ -32,17 +34,15 @@ interface Values {
   user: "";
 }
 
-const Home: NextPage = () => {
-  const signup = async (email: string, password: string) => {
-    try {
-      const user = firebaseClient
-        .auth()
-        .createUserWithEmailAndPassword(email, password);
-      return user;
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+const Signup: NextPage = () => {
+  const [auth, { signup }] = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    auth.user && router.push("/agenda");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.user]);
+
   return (
     <>
       <Container
@@ -65,11 +65,7 @@ const Home: NextPage = () => {
               user: "",
             }}
             onSubmit={(values: Values, actions: FormikHelpers<Values>) => {
-              signup(values.email, values.password)
-                .then((res) => {
-                  console.log(res);
-                })
-                .catch((error) => console.error(error.message));
+              signup(values.email, values.password, values.user);
             }}
           >
             {({
@@ -136,7 +132,7 @@ const Home: NextPage = () => {
                   isLoading={isSubmitting}
                   colorScheme="blue"
                 >
-                  Entrar
+                  Cadastrar
                 </Button>
               </Form>
             )}
@@ -150,4 +146,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Signup;

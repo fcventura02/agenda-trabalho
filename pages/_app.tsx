@@ -2,6 +2,7 @@ import type { AppProps } from "next/app";
 import Head from "next/head";
 import { ChakraProvider } from "@chakra-ui/react";
 import { extendTheme } from "@chakra-ui/react";
+import { AuthProvider } from "../components/Auth";
 const colors = {
   brand: {
     900: "#1a365d",
@@ -20,7 +21,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/Icon.svg" />
       </Head>
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <AuthProvider>
+          <Component {...pageProps} />
+        </AuthProvider>
       </ChakraProvider>
     </>
   );

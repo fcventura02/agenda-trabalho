@@ -3,7 +3,6 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import * as yup from "yup";
-import { firebaseClient, persistenceMode } from "../../config/firebase";
 import { Form, Formik, FormikHelpers } from "formik";
 import {
   Container,
@@ -15,6 +14,7 @@ import {
   FormHelperText,
   Button,
 } from "@chakra-ui/react";
+import { useAuth } from "../Auth";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -29,17 +29,8 @@ interface Values {
   password: "";
 }
 
-export const Login: NextPage = () => {
-  const login = async (email: string, password: string) => {
-    try {
-      const user = firebaseClient.auth().signInWithEmailAndPassword(email, password);
-      firebaseClient.auth().setPersistence(persistenceMode);
-      return user;
-    } catch (error) {
-      return error.message;
-    }
-  };
-
+export const LoginComponent: NextPage = () => {
+  const [, { login }] = useAuth();
   return (
     <>
       <Container
@@ -61,11 +52,7 @@ export const Login: NextPage = () => {
               password: "",
             }}
             onSubmit={(values: Values, actions: FormikHelpers<Values>) => {
-              login(values.email, values.password)
-                .then((res) => {
-                  console.log(res.user);
-                })
-                .catch((error) => console.error(error.message));
+              login(values.email, values.password);
             }}
           >
             {({
@@ -128,5 +115,3 @@ export const Login: NextPage = () => {
     </>
   );
 };
-
-

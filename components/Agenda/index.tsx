@@ -1,11 +1,12 @@
 import { Button, Container } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import { firebaseClient } from "../../config/firebase";
 import Head from "next/head";
 import Image from "next/image";
+import { useAuth } from "../Auth";
 
-export const Agenda: NextPage = () => {
-  const logout = () => firebaseClient.auth().signOut();
+export const AgendaComponent: NextPage = () => {
+  const [,{ logout }] = useAuth();
+  
   return (
     <>
       <Head>
