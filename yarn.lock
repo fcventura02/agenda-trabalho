@@ -231,6 +231,14 @@
   dependencies:
     "@chakra-ui/utils" "1.8.2"
 
+"@chakra-ui/icons@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.15.tgz#90b0e3c2c161c5a100d6b83a277941b22945f880"
+  integrity sha512-MMuPwmeCil9vAXceIN/Fxn6CNHbhkLofFQaKUfs+UaBsviiU2tvS0nqGaxm/9FNzLr5ithPVWpbz3uV7DXc77g==
+  dependencies:
+    "@chakra-ui/icon" "1.1.11"
+    "@types/react" "^17.0.0"
+
 "@chakra-ui/image@1.0.18":
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.18.tgz#9b3b8ee5a9fac5f05699b4fc1705b30aea2073f3"
@@ -1299,6 +1307,25 @@
     prop-types "^15.7.2"
     tslib "^2.1.0"
 
+"@refetty/async@^1.0.0-rc.11":
+  version "1.0.0-rc.11"
+  resolved "https://registry.yarnpkg.com/@refetty/async/-/async-1.0.0-rc.11.tgz#01792c0195b5726e05574b70e98c85910f180672"
+  integrity sha512-qmuozfsWC25OIx62K88MAY/lTQ+gQ84xlCtWArxuDKSAgcnbsAqx1FVO6QGThteX+MsfXu1tqSY+QgGTohfS/w==
+  dependencies:
+    "@refetty/observable" "^1.0.0-rc.10"
+
+"@refetty/observable@^1.0.0-rc.10":
+  version "1.0.0-rc.10"
+  resolved "https://registry.yarnpkg.com/@refetty/observable/-/observable-1.0.0-rc.10.tgz#11b361678ca317fc0e227da56a64a6ada9afc90f"
+  integrity sha512-fw9mqNYqJ3r/XQMWRQyPRQnZ/vGYLqxDV+2/VTHUACxIkScD9TOwJ0wL9VR63fCh7znLZizwNApUNzQdRtONVA==
+
+"@refetty/react@1.0.0-rc.11":
+  version "1.0.0-rc.11"
+  resolved "https://registry.yarnpkg.com/@refetty/react/-/react-1.0.0-rc.11.tgz#b7ba42e8a66aaa7f99b9a241df1a440c1abeeb02"
+  integrity sha512-GC8y3EPx+cLCN0aiA6JJVMMZyGjDjoIhDVeCiLy4pUhTojFjrBwWYCeeQFiXMNmpPCrc+NWx4pLQzBV6ewi3hQ==
+  dependencies:
+    "@refetty/async" "^1.0.0-rc.11"
+
 "@rushstack/eslint-patch@^1.0.6":
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.0.6.tgz#023d72a5c4531b4ce204528971700a78a85a0c50"
@@ -1410,7 +1437,7 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/react@17.0.19":
+"@types/react@17.0.19", "@types/react@^17.0.0":
   version "17.0.19"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.19.tgz#8f2a85e8180a43b57966b237d26a29481dacc991"
   integrity sha512-sX1HisdB1/ZESixMTGnMxH9TDe8Sk709734fEQZzCV/4lSu9kJCPbo2PbTRoZM+53Pp0P10hYVyReUueGwUi4A==
@@ -2181,6 +2208,11 @@ date-and-time@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/date-and-time/-/date-and-time-2.0.0.tgz#99f5fb6b6c7bcd4d1f6dcbeb37553dc0ff797b65"
   integrity sha512-HJSzj25iPm8E01nt+rSmCIlwjsmjvKfUivG/kXBglpymcHF1FolWAqWwTEV4FvN1Lx5UjPf0J1W4H8yQsVBfFg==
+
+date-fns@^2.23.0:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.23.0.tgz#4e886c941659af0cf7b30fafdd1eaa37e88788a9"
+  integrity sha512-5ycpauovVyAk0kXNZz6ZoB9AYMZB4DObse7P3BPWmyEjXNORTI8EJ6X0uaSAq4sCHzM1uajzrkr6HnsLQpxGXA==
 
 debug@2, debug@^2.6.9:
   version "2.6.9"
