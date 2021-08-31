@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import { firebaseClient } from ".";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
@@ -16,5 +17,7 @@ const app = firebase.apps.length
   : firebase.initializeApp(firebaseConfig);
 
 export const persistenceMode = firebase.auth.Auth.Persistence.LOCAL;
+
+export const getToken = () => firebaseClient.auth().currentUser?.getIdToken()
 
 export default app;

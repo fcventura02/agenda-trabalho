@@ -9,33 +9,36 @@ import axios from "axios";
 import { addDays, subDays } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Button, Container, IconButton } from "@chakra-ui/react";
+import { getToken } from "../../config/firebase/client";
 
 interface IGetAgenda {
-  (token: String, when: Date): void;
+  (when: Date): void;
 }
 
-const getAgenda: IGetAgenda = (token, when = new Date()) =>
-  axios({
+const getAgenda: IGetAgenda = async (when = new Date()) => {
+  const token = await getToken();
+  return axios({
     method: "get",
     url: "/api/agenda",
     params: {
       when,
     },
-    /* headers: {
+    headers: {
       Authorization: `Bearer ${token}`,
-    }, */
+    },
   });
+};
 
 export const AgendaComponent: NextPage = () => {
   const [when, setWhen] = useState(() => new Date());
   const [data, { loading, status, error }, fetch] = useFetch(
-    (token: string, date = when) => getAgenda(token, date),
+    (token: string, date = when) => getAgenda(date),
     { lazy: true }
   );
 
   useEffect(() => {
-    fetch("token",when);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetch(when);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [when]);
 
   const backDay = () => setWhen((prevState) => subDays(prevState, 1));
