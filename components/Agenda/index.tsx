@@ -1,27 +1,89 @@
-import { Button, Container } from "@chakra-ui/react";
-import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import type { NextPage } from "next";
+import { formatDate } from "../Date";
 import { useAuth } from "../Auth";
+import { useFetch } from "@refetty/react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { addDays, subDays } from "date-fns";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { Box, Button, Container, IconButton } from "@chakra-ui/react";
+
+interface IGetAgenda {
+  (token: String, when: Date): void;
+}
+
+const getAgenda: IGetAgenda = (token, when = new Date()) =>
+  axios({
+    method: "get",
+    url: "/api/agenda",
+    params: {
+      when,
+    },
+    /* headers: {
+      Authorization: `Bearer ${token}`,
+    }, */
+  });
 
 export const AgendaComponent: NextPage = () => {
-  const [,{ logout }] = useAuth();
-  
+  const [when, setWhen] = useState(() => new Date());
+  const [data, { loading, status, error }, fetch] = useFetch(
+    (token: string, date = when) => getAgenda(token, date),
+    { lazy: true }
+  );
+
+  useEffect(() => {
+    fetch("token",when);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [when]);
+
+  const backDay = () => setWhen((prevState) => subDays(prevState, 1));
+
+  const nextDay = () => setWhen((prevState) => addDays(prevState, 1));
+
   return (
     <>
       <Head>
         <title>Clocker | Agenda</title>
       </Head>
-      <Container
-        maxW="960px"
-        minH="100vh"
-        p={4}
-        centerContent
-        justifyContent="center"
-      >
-        <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
-        <Button onClick={logout}>Sair</Button>
+      <Container maxW="760px" minH="100vh" p={4} centerContent>
+        <Header />
+        <Box w="100%" display="flex" alignItems="center" mt={8}>
+          <IconButton
+            bg="transparent"
+            aria-label="back date"
+            icon={<ChevronLeftIcon />}
+            onClick={backDay}
+          />
+          <Box flex={1} textAlign="center">
+            {formatDate(when, "PPPP")}
+          </Box>
+          <IconButton
+            bg="transparent"
+            aria-label="next date"
+            icon={<ChevronRightIcon />}
+            onClick={nextDay}
+          />
+        </Box>
       </Container>
     </>
+  );
+};
+
+export const Header = () => {
+  const [, { logout }] = useAuth();
+  return (
+    <Box
+      w="100%"
+      justifyContent="space-between"
+      display="flex"
+      alignItems="center"
+    >
+      <Image src="/Logo.svg" alt="Vercel Logo" width={130} height={40} />
+      <Button colorScheme="blue" onClick={logout}>
+        Sair
+      </Button>
+    </Box>
   );
 };
