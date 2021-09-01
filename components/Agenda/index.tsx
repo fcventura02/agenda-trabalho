@@ -1,15 +1,14 @@
 import Head from "next/head";
-import Image from "next/image";
 import type { NextPage } from "next";
 import { formatDate } from "../Date";
-import { useAuth } from "../Auth";
 import { useFetch } from "@refetty/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { addDays, subDays } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import { Box, Button, Container, IconButton } from "@chakra-ui/react";
+import { Box, Container, IconButton } from "@chakra-ui/react";
 import { getToken } from "../../config/firebase/client";
+import { Header } from "../Header";
 
 interface IGetAgenda {
   (when: Date): void;
@@ -71,22 +70,5 @@ export const AgendaComponent: NextPage = () => {
         </Box>
       </Container>
     </>
-  );
-};
-
-export const Header = () => {
-  const [, { logout }] = useAuth();
-  return (
-    <Box
-      w="100%"
-      justifyContent="space-between"
-      display="flex"
-      alignItems="center"
-    >
-      <Image src="/Logo.svg" alt="Vercel Logo" width={130} height={40} />
-      <Button colorScheme="blue" onClick={logout}>
-        Sair
-      </Button>
-    </Box>
   );
 };
