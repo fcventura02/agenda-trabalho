@@ -16,12 +16,28 @@ for (let i = 0; i <= totalHours; i++) {
   timeBlocks.push(hours);
 }
 
-console.log(timeBlocks);
+const getUserId = async (username: string | string[]): Promise<string> => {
+  const blocks = await profile.where("username", "==", username).get();
+  const { userId } = blocks.docs[0]?.data();
+  return userId;
+};
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   const when = req.query.when;
   const username = req.query.username;
+  const userId = await getUserId(username);
+  const doc = await agenda.doc(`${userId}#${when}`).get();
+  if (doc.exists) {
+    return res.status(400);
+  }
+  await agenda.doc(`${userId}#${when}`).set({
+    userId,
+    when,
+    name: req.query.name,
+    phone: req.query.phone,
+  });
+};
+const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     /* const profileDoc = await profile
       .where("username", "==", "Venturadev")
@@ -35,4 +51,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } catch (error) {
     return res.status(401).json({ error: error.message });
   }
+};
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const method = req.method;
+  if (method === "POST") {
+    return await setSchedule(req, res);
+  }
+  if (method === "GET") {
+    return await getSchedule(req, res);
+  }
+  return res.status(405);
 };

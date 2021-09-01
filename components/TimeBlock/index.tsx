@@ -16,6 +16,16 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import axios from "axios";
+
+const setSchedule = async (when: string, name: string, phone: string) => {
+  const username = window.location.pathname.replace("/", "");
+  return await axios({
+    method: "post",
+    url: "/api/schedule",
+    params: { when, username, name, phone },
+  });
+};
 
 interface IModalTimeBlockProps {
   isOpen: boolean;
@@ -76,7 +86,8 @@ export const TimeBlock = ({ time }: ITimeBlockProps) => {
     errors,
     touched,
   } = useFormik({
-    onSubmit: ()=>{},
+    onSubmit: async (values) =>
+      await setSchedule(time, values.name, values.phone),
     initialValues: {
       name: "",
       phone: "",
