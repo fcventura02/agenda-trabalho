@@ -1,22 +1,12 @@
 import axios from "axios";
 import Head from "next/head";
-import Image from "next/image";
 import { useFetch } from "@refetty/react";
-import { Props, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { addDays, subDays } from "date-fns";
-import { formatDate, Header, useAuth } from "../components";
+import { formatDate, Header, TimeBlock } from "../components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  SimpleGrid,
-  Spinner,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Container, IconButton, SimpleGrid } from "@chakra-ui/react";
 import { Loading } from "../components";
-import { AppProps } from "next/dist/shared/lib/router/router";
 
 interface IGetSchedule {
   (when: Date): void;
@@ -41,15 +31,13 @@ export default function Schedule() {
     { lazy: true }
   );
 
+  const backDay = () => setWhen((prevState) => subDays(prevState, 1));
+  const nextDay = () => setWhen((prevState) => addDays(prevState, 1));
+
   useEffect(() => {
     fetch(when);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [when]);
-
-  const backDay = () => setWhen((prevState) => subDays(prevState, 1));
-
-  const nextDay = () => setWhen((prevState) => addDays(prevState, 1));
-
   return (
     <>
       <Head>
@@ -74,26 +62,20 @@ export default function Schedule() {
             onClick={nextDay}
           />
         </Box>
-        <SimpleGrid w="100%" textAlign="center" flex={1} columns={2} spacing={4}>
+        <SimpleGrid
+          w="100%"
+          textAlign="center"
+          flex={1}
+          alignContent="center"
+          columns={2}
+          spacing={4}
+        >
           {loading && <Loading />}
           {data?.map((time: string, index: string) => (
-            <TimeBlock key={index} time={time} />
+            <TimeBlock key={index} time={time} onClick={open} />
           ))}
         </SimpleGrid>
       </Container>
     </>
   );
 }
-
-interface ITimeBlockProps {
-  time: string;
-  key: string;
-}
-
-const TimeBlock = ({ time }: ITimeBlockProps) => {
-  return (
-    <Button padding={8} colorScheme="blue">
-      <Text fontSize="2xl">{time}</Text>
-    </Button>
-  );
-};
