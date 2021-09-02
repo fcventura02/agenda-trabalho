@@ -28,7 +28,7 @@ const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   const userId = await getUserId(username);
   const doc = await agenda.doc(`${userId}#${when}`).get();
   if (doc.exists) {
-    return res.status(400);
+    return res.status(400).json({error: 'Horário já cadastrado'});
   }
   await agenda.doc(`${userId}#${when}`).set({
     userId,
@@ -36,6 +36,7 @@ const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
     name: req.query.name,
     phone: req.query.phone,
   });
+  return res.status(201).json({Succes: 'Horário cadastrado com sucesso'});
 };
 const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -47,7 +48,7 @@ const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
       .where("userId", "==", profileDoc)
       .where("when", "==", when)
       .get(); */
-    res.status(200).json(timeBlocks);
+    return res.status(200).json(timeBlocks);
   } catch (error) {
     return res.status(401).json({ error: error.message });
   }
@@ -55,12 +56,16 @@ const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const method = req.method;
-  if (method === "POST") {
-    return await setSchedule(req, res);
+  try {
+    const method = req.method;
+    if (method === "POST") {
+      return await setSchedule(req, res);
+    }
+    if (method === "GET") {
+      return await getSchedule(req, res);
+    }
+    return res.status(405);
+  } catch (error) {
+    return res.status(405);
   }
-  if (method === "GET") {
-    return await getSchedule(req, res);
-  }
-  return res.status(405);
 };

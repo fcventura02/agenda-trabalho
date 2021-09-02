@@ -15,6 +15,7 @@ import {
   ModalOverlay,
   Stack,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
 
@@ -52,9 +53,11 @@ export const ModalTimeBlock = ({
         <ModalCloseButton />
         <ModalBody pb={6}>{children}</ModalBody>
         <ModalFooter>
-          <Button variant="ghost" onClick={onClose} marginRight={4}>
-            Cancelar
-          </Button>
+          {!isSubmiting && (
+            <Button variant="ghost" onClick={onClose} marginRight={4}>
+              Cancelar
+            </Button>
+          )}
           <Button
             isLoading={isSubmiting}
             colorScheme="blue"
@@ -76,6 +79,7 @@ interface ITimeBlockProps {
 
 export const TimeBlock = ({ time }: ITimeBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const toast = useToast();
   const toogle = () => setIsOpen((prev) => !prev);
   const {
     values,
@@ -86,8 +90,27 @@ export const TimeBlock = ({ time }: ITimeBlockProps) => {
     errors,
     touched,
   } = useFormik({
-    onSubmit: async (values) =>
-      await setSchedule(time, values.name, values.phone),
+    onSubmit: async (values, form) => {
+      try {
+        await setSchedule(time, values.name, values.phone);
+        toast({
+          title: `Agendado com sucesso`,
+          position: "top",
+          status: "success",
+          isClosable: true,
+          duration: 3000,
+        });
+        toogle();
+      } catch (error) {
+        toast({
+          title: `Erro ao agendar`,
+          position: "top",
+          status: "error",
+          isClosable: true,
+        });
+        console.error(error.message);
+      }
+    },
     initialValues: {
       name: "",
       phone: "",
@@ -116,11 +139,12 @@ export const TimeBlock = ({ time }: ITimeBlockProps) => {
             children="Nome"
             name="name"
             type="text"
+            placeholder="Fulano de Tal"
             value={values.name}
             error={errors.name}
             onChange={handleChange}
             onBlur={handleBlur}
-            placeholder="Fulano de Tal"
+            disabled={isSubmitting}
           />
           <Input
             touched={touched.phone}
@@ -132,6 +156,7 @@ export const TimeBlock = ({ time }: ITimeBlockProps) => {
             error={errors.phone}
             onChange={handleChange}
             onBlur={handleBlur}
+            disabled={isSubmitting}
           />
         </Stack>
       </ModalTimeBlock>

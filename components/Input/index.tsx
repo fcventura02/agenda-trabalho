@@ -17,6 +17,7 @@ interface IInputProps {
   touched?: boolean;
   onChange: any;
   onBlur: any;
+  disabled: boolean;
 }
 
 export const Input = ({
@@ -29,8 +30,7 @@ export const Input = ({
   placeholder,
   onChange,
   onBlur,
-  ...props
-}: IInputProps) => (
+...props}: IInputProps) => (
   <FormControl id={name} mt={4}>
     <InputGroup>
       <InputLeftAddon children={children} />
