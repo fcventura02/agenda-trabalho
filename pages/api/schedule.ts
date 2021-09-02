@@ -23,18 +23,20 @@ const getUserId = async (username: string | string[]): Promise<string> => {
 };
 
 const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
-  const when = req.query.when;
-  const username = req.query.username;
+  const time = req.body.time;
+  const date = req.body.date;
+  const username = req.body.username;
   const userId = await getUserId(username);
-  const doc = await agenda.doc(`${userId}#${when}`).get();
+  const doc = await agenda.doc(`${userId}#${date}#${time}`).get();
   if (doc.exists) {
     return res.status(400).json({error: 'Horário já cadastrado'});
   }
-  await agenda.doc(`${userId}#${when}`).set({
+  await agenda.doc(`${userId}#${date}#${time}`).set({
     userId,
-    when,
-    name: req.query.name,
-    phone: req.query.phone,
+    time,
+    date,
+    name: req.body.name,
+    phone: req.body.phone,
   });
   return res.status(201).json({Succes: 'Horário cadastrado com sucesso'});
 };
@@ -46,7 +48,7 @@ const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
     console.log(profileDoc.userId); */
     /*  const snapshot = await agenda
       .where("userId", "==", profileDoc)
-      .where("when", "==", when)
+      .where("time", "==", time)
       .get(); */
     return res.status(200).json(timeBlocks);
   } catch (error) {

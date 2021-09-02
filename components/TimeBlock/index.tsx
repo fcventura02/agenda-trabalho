@@ -18,13 +18,20 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { format } from "date-fns";
 
-const setSchedule = async (when: string, name: string, phone: string) => {
+const setSchedule = async (
+  time: string,
+  data: Date,
+  name: string,
+  phone: string
+) => {
+  const date = format(data, "yyyy-MM-dd");
   const username = window.location.pathname.replace("/", "");
   return await axios({
     method: "post",
     url: "/api/schedule",
-    params: { when, username, name, phone },
+    data: { time, date, username, name, phone },
   });
 };
 
@@ -48,7 +55,7 @@ export const ModalTimeBlock = ({
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent w="92%">
         <ModalHeader>Agendar horário para {time}h</ModalHeader>
         <ModalCloseButton />
         <ModalBody pb={6}>{children}</ModalBody>
@@ -73,14 +80,37 @@ export const ModalTimeBlock = ({
 
 interface ITimeBlockProps {
   time: string;
+  date: Date;
   key: string;
   onClick: Function;
 }
 
-export const TimeBlock = ({ time }: ITimeBlockProps) => {
+export const TimeBlock = ({ time, date }: ITimeBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const toast = useToast();
+  const toast = useToast({
+    position: "top",
+    isClosable: true,
+    duration: 3000,
+  });
   const toogle = () => setIsOpen((prev) => !prev);
+  const submitForm = async (
+    values: { name: string; phone: string }
+  ) => {
+    try {
+      await setSchedule(time, date, values.name, values.phone);
+      toast({
+        title: `Agendado com sucesso`,
+        status: "success",
+      });
+      toogle();
+    } catch (error) {
+      toast({
+        title: `Erro ao agendar`,
+        status: "error",
+      });
+      console.error(error.message);
+    }
+  };
   const {
     values,
     handleSubmit,
@@ -90,26 +120,8 @@ export const TimeBlock = ({ time }: ITimeBlockProps) => {
     errors,
     touched,
   } = useFormik({
-    onSubmit: async (values, form) => {
-      try {
-        await setSchedule(time, values.name, values.phone);
-        toast({
-          title: `Agendado com sucesso`,
-          position: "top",
-          status: "success",
-          isClosable: true,
-          duration: 3000,
-        });
-        toogle();
-      } catch (error) {
-        toast({
-          title: `Erro ao agendar`,
-          position: "top",
-          status: "error",
-          isClosable: true,
-        });
-        console.error(error.message);
-      }
+    onSubmit: async (values) => {
+      submitForm(values);
     },
     initialValues: {
       name: "",

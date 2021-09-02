@@ -2,7 +2,7 @@ import axios from "axios";
 import Head from "next/head";
 import { useFetch } from "@refetty/react";
 import { useEffect, useState } from "react";
-import { addDays, subDays } from "date-fns";
+import { addDays, format, subDays } from "date-fns";
 import { formatDate, Header, TimeBlock } from "../components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Container, IconButton, SimpleGrid } from "@chakra-ui/react";
@@ -72,7 +72,12 @@ export default function Schedule() {
         >
           {loading && <Loading />}
           {data?.map((time: string, index: string) => (
-            <TimeBlock key={index} time={time} onClick={open} />
+            <TimeBlock
+              key={index}
+              time={time}
+              date={when}
+              onClick={open}
+            />
           ))}
         </SimpleGrid>
       </Container>
