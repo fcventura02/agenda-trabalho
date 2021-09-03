@@ -7,41 +7,54 @@ import { formatDate, Header, TimeBlock } from "../components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Container, IconButton, SimpleGrid } from "@chakra-ui/react";
 import { Loading } from "../components";
+import { useRouter } from "next/router";
 
 interface IGetSchedule {
-  (when: Date | number): void;
+  (when: Date | number, username: string): any;
 }
 
-const getSchedule: IGetSchedule = async (when = new Date()) => {
-  const username = window.location.pathname.replace("/", "");
+const getSchedule: IGetSchedule = async (
+  when = new Date(),
+  username: string
+) => {
   const date = format(when, "yyyy-MM-dd");
-  console.log(date)
-  return axios({
-    method: "get",
-    url: "/api/schedule",
-    params: {
-      date,
-      username,
-    },
-  });
+  if (!username) {
+    return;
+  }
+  try {
+    return await axios({
+      method: "get",
+      url: "/api/schedule",
+      params: {
+        date,
+        username,
+      },
+    });
+  } catch (error) {
+    return error;
+  }
 };
 
 export default function Schedule() {
+  const router = useRouter();
   const [when, setWhen] = useState(() => new Date());
-  const [data, { loading }, fetch] = useFetch(
-    getSchedule,
-    {
-      lazy: true,
-    }
-  );
+  const username = router.query.username;
+  const [data, { loading }, fetch] = useFetch(getSchedule, {
+    lazy: true,
+  });
 
   const backDay = () => setWhen((prevState) => subDays(prevState, 1));
   const nextDay = () => setWhen((prevState) => addDays(prevState, 1));
+  const isBackDay = () => {
+    const day = new Date();
+    return subDays(when, 1) < day && when < day;
+  };
 
   useEffect(() => {
-    fetch(when);
+    fetch(when, username);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [when]);
+  }, [when, router.query.username]);
   return (
     <>
       <Head>
@@ -51,6 +64,7 @@ export default function Schedule() {
         <Header />
         <Box w="100%" display="flex" alignItems="center" mt={8} mb={8}>
           <IconButton
+            isDisabled={isBackDay()}
             bg="transparent"
             aria-label="back date"
             icon={<ChevronLeftIcon />}
@@ -66,6 +80,7 @@ export default function Schedule() {
             onClick={nextDay}
           />
         </Box>
+        {loading && <Loading />}
         <SimpleGrid
           w="100%"
           textAlign="center"
@@ -74,7 +89,6 @@ export default function Schedule() {
           columns={2}
           spacing={4}
         >
-          {loading && <Loading />}
           {data?.map(
             (obj: { isBlocked: boolean; time: string }, index: string) => (
               <TimeBlock

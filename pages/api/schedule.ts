@@ -16,8 +16,13 @@ for (let i = 0; i <= totalHours; i++) {
   timeBlocksList.push(hours);
 }
 
-const getUserId = async (username: string | string[]): Promise<string> => {
+const getUserId = async (
+  username: string | string[]
+): Promise<string | boolean> => {
   const blocks = await profile.where("username", "==", username).get();
+  if (!blocks.docs.length) {
+    return false;
+  }
   const { userId } = blocks.docs[0]?.data();
   return userId;
 };
@@ -30,6 +35,11 @@ const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   const doc = await agenda.doc(`${userId}#${date}#${time}`).get();
   if (doc.exists) {
     return res.status(400).json({ error: "Horário já cadastrado" });
+  }
+  const nowDate = new Date();
+  const requestDate = new Date(`${date} ${time}`);
+  if (requestDate < nowDate) {
+    return res.status(400).json({ error: "Horário indisponível" });
   }
   await agenda.doc(`${userId}#${date}#${time}`).set({
     userId,
@@ -44,8 +54,10 @@ const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const username = req.query.username;
     const userId = await getUserId(username);
+    if (!userId) {
+      return res.status(404).json({ error: "User not found" });
+    }
     const date = req.query.date;
-    console.log(date);
     const { docs } = await agenda
       .where("userId", "==", userId)
       .where("date", "==", date)
@@ -71,8 +83,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (method === "GET") {
       return await getSchedule(req, res);
     }
-    return res.status(405);
+    return res.status(405).json({ message: "Method not found" });
   } catch (error) {
-    return res.status(405);
+    return res.status(405).json({ error: error.message });
   }
 };
