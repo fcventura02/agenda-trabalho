@@ -82,10 +82,11 @@ interface ITimeBlockProps {
   time: string;
   date: Date;
   key: string;
+  isDisabled: boolean;
   onClick: Function;
 }
 
-export const TimeBlock = ({ time, date }: ITimeBlockProps) => {
+export const TimeBlock = ({ time, date, ...props }: ITimeBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast({
     position: "top",
@@ -93,9 +94,7 @@ export const TimeBlock = ({ time, date }: ITimeBlockProps) => {
     duration: 3000,
   });
   const toogle = () => setIsOpen((prev) => !prev);
-  const submitForm = async (
-    values: { name: string; phone: string }
-  ) => {
+  const submitForm = async (values: { name: string; phone: string }) => {
     try {
       await setSchedule(time, date, values.name, values.phone);
       toast({
@@ -136,7 +135,12 @@ export const TimeBlock = ({ time, date }: ITimeBlockProps) => {
     }),
   });
   return (
-    <Button padding={8} colorScheme="blue" onClick={toogle}>
+    <Button
+      disabled={props.isDisabled}
+      padding={8}
+      colorScheme="blue"
+      onClick={toogle}
+    >
       <Text fontSize="2xl">{time}</Text>
       <ModalTimeBlock
         time={time}

@@ -9,16 +9,18 @@ import { Box, Container, IconButton, SimpleGrid } from "@chakra-ui/react";
 import { Loading } from "../components";
 
 interface IGetSchedule {
-  (when: Date): void;
+  (when: Date | number): void;
 }
 
 const getSchedule: IGetSchedule = async (when = new Date()) => {
-  const username = window.location.pathname;
+  const username = window.location.pathname.replace("/", "");
+  const date = format(when, "yyyy-MM-dd");
+  console.log(date)
   return axios({
     method: "get",
     url: "/api/schedule",
     params: {
-      when,
+      date,
       username,
     },
   });
@@ -26,9 +28,11 @@ const getSchedule: IGetSchedule = async (when = new Date()) => {
 
 export default function Schedule() {
   const [when, setWhen] = useState(() => new Date());
-  const [data, { loading, status, error }, fetch] = useFetch(
-    (token: string, date = when) => getSchedule(date),
-    { lazy: true }
+  const [data, { loading }, fetch] = useFetch(
+    getSchedule,
+    {
+      lazy: true,
+    }
   );
 
   const backDay = () => setWhen((prevState) => subDays(prevState, 1));
@@ -71,14 +75,17 @@ export default function Schedule() {
           spacing={4}
         >
           {loading && <Loading />}
-          {data?.map((time: string, index: string) => (
-            <TimeBlock
-              key={index}
-              time={time}
-              date={when}
-              onClick={open}
-            />
-          ))}
+          {data?.map(
+            (obj: { isBlocked: boolean; time: string }, index: string) => (
+              <TimeBlock
+                isDisabled={obj.isBlocked}
+                key={index}
+                time={obj.time}
+                date={when}
+                onClick={open}
+              />
+            )
+          )}
         </SimpleGrid>
       </Container>
     </>

@@ -9,11 +9,11 @@ const startAt = new Date(2021, 1, 1, 8, 0);
 const endtAt = new Date(2021, 1, 1, 17, 0);
 const totalHours = differenceInHours(endtAt, startAt);
 
-const timeBlocks: string[] = [];
+const timeBlocksList: string[] = [];
 
 for (let i = 0; i <= totalHours; i++) {
   const hours = format(addHours(startAt, i), "HH:mm");
-  timeBlocks.push(hours);
+  timeBlocksList.push(hours);
 }
 
 const getUserId = async (username: string | string[]): Promise<string> => {
@@ -29,7 +29,7 @@ const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   const userId = await getUserId(username);
   const doc = await agenda.doc(`${userId}#${date}#${time}`).get();
   if (doc.exists) {
-    return res.status(400).json({error: 'Horário já cadastrado'});
+    return res.status(400).json({ error: "Horário já cadastrado" });
   }
   await agenda.doc(`${userId}#${date}#${time}`).set({
     userId,
@@ -38,19 +38,24 @@ const setSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
     name: req.body.name,
     phone: req.body.phone,
   });
-  return res.status(201).json({Succes: 'Horário cadastrado com sucesso'});
+  return res.status(201).json({ Succes: "Horário cadastrado com sucesso" });
 };
 const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    /* const profileDoc = await profile
-      .where("username", "==", "Venturadev")
+    const username = req.query.username;
+    const userId = await getUserId(username);
+    const date = req.query.date;
+    console.log(date);
+    const { docs } = await agenda
+      .where("userId", "==", userId)
+      .where("date", "==", date)
       .get();
-    console.log(profileDoc.userId); */
-    /*  const snapshot = await agenda
-      .where("userId", "==", profileDoc)
-      .where("time", "==", time)
-      .get(); */
-    return res.status(200).json(timeBlocks);
+    const timeBlockeds = docs?.map((doc: any) => doc.data());
+    const result = timeBlocksList.map((time) => ({
+      time,
+      isBlocked: !!timeBlockeds.find((doc: any) => doc.time === time),
+    }));
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(401).json({ error: error.message });
   }
