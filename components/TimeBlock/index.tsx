@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import { Input } from "../Input";
 import * as yup from "yup";
-import "yup-phone";
 import {
   Button,
   Modal,
@@ -86,7 +85,7 @@ interface ITimeBlockProps {
   onClick: Function;
 }
 
-export const TimeBlock = ({ time, date, ...props }: ITimeBlockProps) => {
+export const TimeBlock = ({ time, date, isDisabled }: ITimeBlockProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast({
     position: "top",
@@ -130,13 +129,12 @@ export const TimeBlock = ({ time, date, ...props }: ITimeBlockProps) => {
       name: yup.string().required("Preenchimento obrigatório"),
       phone: yup
         .string()
-        .phone("BR", true, "Número de telefone inválido")
         .required("Preenchimento obrigatório"),
     }),
   });
   return (
     <Button
-      disabled={props.isDisabled}
+      disabled={isDisabled}
       padding={8}
       colorScheme="blue"
       onClick={toogle}
@@ -166,8 +164,8 @@ export const TimeBlock = ({ time, date, ...props }: ITimeBlockProps) => {
             touched={touched.phone}
             children="Telefone"
             name="phone"
-            type="number"
             placeholder="(99) 9 9999-9999"
+            mask={['(99) 9 9999-9999', '(99) 9999-9999']}
             value={values.phone}
             error={errors.phone}
             onChange={handleChange}

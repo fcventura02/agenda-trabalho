@@ -23,8 +23,9 @@
     "next": "11.1.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "yup": "^0.32.9",
-    "yup-phone": "^1.2.19"
+    "remask": "^0.1.0-alpha.5",
+    "vanilla-masker": "^1.2.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@types/react": "17.0.19",
