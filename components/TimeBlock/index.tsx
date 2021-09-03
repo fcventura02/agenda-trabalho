@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { format } from "date-fns";
+import { Props } from "framer-motion/types/types";
 
 const setSchedule = async (
   time: string,
@@ -34,15 +35,6 @@ const setSchedule = async (
   });
 };
 
-interface IModalTimeBlockProps {
-  isOpen: boolean;
-  isSubmiting: boolean;
-  time: string;
-  onClose: () => void;
-  onComplet: () => void;
-  children: React.ReactNode;
-}
-
 export const ModalTimeBlock = ({
   time,
   isOpen,
@@ -50,7 +42,7 @@ export const ModalTimeBlock = ({
   onClose,
   onComplet,
   children,
-}: IModalTimeBlockProps) => {
+}: Props) => {
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
@@ -77,15 +69,7 @@ export const ModalTimeBlock = ({
   );
 };
 
-interface ITimeBlockProps {
-  time: string;
-  date: Date;
-  key: string;
-  isDisabled: boolean;
-  onClick: Function;
-}
-
-export const TimeBlock = ({ time, date, isDisabled }: ITimeBlockProps) => {
+export const TimeBlock = ({ time, date, isDisabled, onSuccess }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toast = useToast({
     position: "top",
@@ -101,9 +85,10 @@ export const TimeBlock = ({ time, date, isDisabled }: ITimeBlockProps) => {
         status: "success",
       });
       toogle();
+      onSuccess();
     } catch (error) {
       toast({
-        title: `Erro ao agendar`,
+        title: `Não foi possível agendar neste horário`,
         status: "error",
       });
       console.error(error.message);

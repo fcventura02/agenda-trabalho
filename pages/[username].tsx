@@ -43,6 +43,10 @@ export default function Schedule() {
     lazy: true,
   });
 
+  const refresh = () => {
+    fetch(when, username);
+  };
+
   const backDay = () => setWhen((prevState) => subDays(prevState, 1));
   const nextDay = () => setWhen((prevState) => addDays(prevState, 1));
   const isBackDay = () => {
@@ -51,8 +55,7 @@ export default function Schedule() {
   };
 
   useEffect(() => {
-    fetch(when, username);
-
+    refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [when, router.query.username]);
   return (
@@ -61,7 +64,7 @@ export default function Schedule() {
         <title>Clocker | Agenda</title>
       </Head>
       <Container maxW="760px" minH="100vh" p={4} centerContent>
-        <Header />
+        <Header isLoged={false} />
         <Box w="100%" display="flex" alignItems="center" mt={8} mb={8}>
           <IconButton
             isDisabled={isBackDay()}
@@ -97,6 +100,7 @@ export default function Schedule() {
                 time={obj.time}
                 date={when}
                 onClick={open}
+                onSuccess={refresh}
               />
             )
           )}
