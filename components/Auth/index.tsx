@@ -36,6 +36,13 @@ export const signup = async (
   username: string
 ) => {
   try {
+    await axios({
+      method: "get",
+      url: "/api/profile",
+      params: {
+        username,
+      },
+    });
     await firebaseClient.auth().createUserWithEmailAndPassword(email, password);
     const user = await login(email, password);
     const token = await user?.getIdToken();
@@ -44,6 +51,7 @@ export const signup = async (
       method: "post",
       url: "/api/profile",
       data: {
+        email,
         username,
       },
       headers: {
@@ -52,6 +60,7 @@ export const signup = async (
     });
     return user;
   } catch (error) {
+    console.log(error)
     return error;
   }
 };

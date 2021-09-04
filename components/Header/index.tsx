@@ -1,6 +1,5 @@
-import { Box, Button, Link as LinkStyled } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import Image from "next/image";
-import Link from "next/link";
 import { useAuth } from "../Auth";
 
 export const Header = ({ isLoged = true }) => {
@@ -12,11 +11,7 @@ export const Header = ({ isLoged = true }) => {
       justifyContent={isLoged ? "space-between" : "center"}
       alignItems="center"
     >
-      <LinkStyled>
-        <Link href="/" passHref>
-          <Image src="/Logo.svg" alt="Vercel Logo" width={130} height={40} />
-        </Link>
-      </LinkStyled>
+      <Image src="/Logo.svg" alt="Vercel Logo" width={130} height={40} />
       {isLoged && (
         <Button colorScheme="blue" onClick={logout}>
           Sair
