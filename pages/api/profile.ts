@@ -7,7 +7,6 @@ const profile = db.collection("profiles");
 
 const verifyUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const username = req.query.username;
-  console.log(username);
   const blocks = await profile.where("username", "==", username).get();
   if (!blocks.docs.length) {
     return res.status(200).json({ verify: "User not created" });
@@ -38,13 +37,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const method = req.method;
-  console.log(req.body);
   try {
     if (method === "GET") return await verifyUser(req, res);
     if (method === "POST") return await setNewUser(req, res);
     return res.status(405).json({ message: "Method not found" });
   } catch (error) {
-    console.log(error);
     return res.status(500).json(error);
   }
 }
