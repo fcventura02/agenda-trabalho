@@ -21,7 +21,7 @@ export const login = async (email: string, password: string) => {
     firebaseClient.auth().setPersistence(persistenceMode);
     return firebaseClient.auth().currentUser;
   } catch (error) {
-    console.error("Login: ", error.message);
+    console.error("Login: ", error);
     return error;
   }
 };
