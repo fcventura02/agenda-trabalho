@@ -55,11 +55,9 @@ export const AgendaComponent: NextPage = () => {
       }).catch((error) => {
         console.error(error.message);
       });
-      console.log(result?.data.username);
       userName === "" && setUserName(result?.data.username);
       return result;
     } catch (error) {
-      console.error(error.message);
       return error;
     }
   };
