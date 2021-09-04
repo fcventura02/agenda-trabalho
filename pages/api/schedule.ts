@@ -65,12 +65,22 @@ const getSchedule = async (req: NextApiRequest, res: NextApiResponse) => {
     const timeBlockeds = docs?.map((doc: any) => doc.data());
     const result = timeBlocksList.map((time) => ({
       time,
-      isBlocked: !!timeBlockeds.find((doc: any) => doc.time === time),
+      isBlocked: verifyHours(date, time, timeBlockeds),
     }));
     return res.status(200).json(result);
   } catch (error) {
     return res.status(401).json({ error: error.message });
   }
+};
+
+const verifyHours = (date: any, time: any, timeBlockeds: any[]) => {
+  const nowDate = new Date();
+  const requestDate = new Date(`${date} ${time}`);
+  if (requestDate < nowDate) {
+    return true;
+  }
+  if (!!timeBlockeds.find((doc: any) => doc.time === time)) return true;
+  return false;
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
