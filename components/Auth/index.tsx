@@ -22,7 +22,7 @@ export const login = async (email: string, password: string) => {
     return firebaseClient.auth().currentUser;
   } catch (error) {
     console.error("Login: ", error.message);
-    return null;
+    return error;
   }
 };
 
@@ -40,7 +40,7 @@ export const signup = async (
     const user = await login(email, password);
     const token = await user?.getIdToken();
     //setupProfile(token, username)
-    const { data } = await axios({
+    await axios({
       method: "post",
       url: "/api/profile",
       data: {
@@ -50,10 +50,9 @@ export const signup = async (
         authorization: `Bearer ${token}`,
       },
     });
-    console.log(data);
     return user;
   } catch (error) {
-    console.error("Signup: ", error.message);
+    return error;
   }
 };
 
