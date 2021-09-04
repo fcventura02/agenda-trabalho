@@ -7,12 +7,19 @@ import axios from "axios";
 import { addDays, subDays } from "date-fns";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
+  Alert,
+  AlertIcon,
   Box,
+  Button,
   Container,
   Divider,
   Heading,
   IconButton,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
   Text,
+  useClipboard,
 } from "@chakra-ui/react";
 import { getToken } from "../../config/firebase/client";
 import { Header } from "../Header";
@@ -24,35 +31,52 @@ interface IGetAgenda {
   (when: Date): void;
 }
 
-const getAgenda: IGetAgenda = async (when = new Date()) => {
-  try {
-    const token = await getToken();
-    const date = format(when, "yyyy-MM-dd");
-    return axios({
-      method: "get",
-      url: "/api/agenda",
-      params: {
-        date,
-      },
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }).catch((error) => {
-      console.error(error.message);
-    });
-  } catch (error) {
-    console.error(error.message);
-  }
-};
-
 export const AgendaComponent: NextPage = () => {
   const [when, setWhen] = useState(() => new Date());
+  const [userName, setUserName] = useState("");
+  const [dia, setDia] = useState("do dia");
+  const { hasCopied, onCopy } = useClipboard(
+    window?.location.host + "/" + userName
+  );
+  const date = new Date();
+  const getAgenda: IGetAgenda = async (when = new Date()) => {
+    try {
+      const token = await getToken();
+      const date = format(when, "yyyy-MM-dd");
+      const result = await axios({
+        method: "get",
+        url: "/api/agenda",
+        params: {
+          date,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).catch((error) => {
+        console.error(error.message);
+      });
+      console.log(result?.data.username);
+      userName === "" && setUserName(result?.data.username);
+      return result;
+    } catch (error) {
+      console.error(error.message);
+      return error;
+    }
+  };
+
   const [data, { loading }, fetch] = useFetch(getAgenda, {
     lazy: true,
   });
 
   useEffect(() => {
     fetch(when);
+    if (date.getDate() > when.getDate()) {
+      setDia("dos dia anteriores");
+    } else if (date.getDate() < when.getDate()) {
+      setDia("dos próximos dia");
+    } else {
+      setDia("do dia");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [when]);
 
@@ -67,6 +91,23 @@ export const AgendaComponent: NextPage = () => {
       </Head>
       <Container maxW="760px" minH="100vh" p={4} centerContent>
         <Header />
+        <Box w="100%" pt={4}>
+          <Heading>Bem vindo, {userName}</Heading>
+          <Text>Aqui está sua agenda {dia}!</Text>
+          <Popover isOpen={hasCopied}>
+            <PopoverTrigger>
+              <Button onClick={onCopy} mt={4} mb={4}>
+                Compartilhe seu link
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Alert status="success">
+                <AlertIcon />
+                Copiado!
+              </Alert>
+            </PopoverContent>
+          </Popover>
+        </Box>
         <Box w="100%" display="flex" alignItems="center" mt={8} mb={8}>
           <IconButton
             bg="transparent"
@@ -85,7 +126,7 @@ export const AgendaComponent: NextPage = () => {
           />
         </Box>
         {loading && <Loading />}
-        {data?.map(
+        {data?.agenda.map(
           (obj: { time: string; client: { name: string; phone: string } }) => (
             // eslint-disable-next-line react/jsx-key
             <AgendaBlock
@@ -115,9 +156,11 @@ const AgendaBlock = ({ time, name, phone, ...props }: Props) => (
     alignItems="center"
     color={name ? "white" : "blue.200"}
     transition="1s"
-    _hover={name && {
-      background: "blue.600",
-    }}
+    _hover={
+      name && {
+        background: "blue.600",
+      }
+    }
     {...props}
   >
     <Box w="35%">

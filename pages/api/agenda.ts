@@ -4,6 +4,8 @@ import app from "../../config/firebase/server";
 
 const db = app.firestore();
 const agenda = db.collection("agenda");
+const profile = db.collection("profiles");
+
 const startAt = new Date(2021, 1, 1, 8, 0);
 const endtAt = new Date(2021, 1, 1, 17, 0);
 const totalHours = differenceInHours(endtAt, startAt);
@@ -23,6 +25,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).json({ error: "invalid token" });
   try {
     const { user_id } = await app.auth().verifyIdToken(token);
+    const profileInfo = await profile.where("userId", "==", user_id).get();
+    const { username } = profileInfo.docs[0].data();
     const { docs } = await agenda
       .where("userId", "==", user_id)
       .where("date", "==", when)
@@ -39,7 +43,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         client: client ? { name: client.name, phone: client.phone } : {},
       };
     });
-    res.status(200).json(result);
+    res.status(200).json({username, agenda: result});
   } catch (error) {
     return res.status(401).json({ error: error.message });
   }
