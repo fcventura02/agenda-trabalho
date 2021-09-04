@@ -50,7 +50,7 @@ const Signup: NextPage = () => {
     touched,
   } = useFormik({
     onSubmit: async (values) => {
-      submitForm(values);
+      await submitForm(values);
     },
     initialValues: {
       email: "",

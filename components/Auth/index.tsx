@@ -60,7 +60,6 @@ export const signup = async (
     });
     return user;
   } catch (error) {
-    console.log(error)
     return error;
   }
 };

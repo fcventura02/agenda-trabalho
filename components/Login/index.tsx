@@ -35,15 +35,15 @@ export const LoginComponent: NextPage = () => {
   const [, { login }] = useAuth();
   const {
     values,
+    isSubmitting,
     handleSubmit,
     handleBlur,
     handleChange,
-    isSubmitting,
     errors,
     touched,
   } = useFormik({
     onSubmit: async (values) => {
-      submitForm(values);
+        await submitForm(values);
     },
     initialValues: {
       email: "",

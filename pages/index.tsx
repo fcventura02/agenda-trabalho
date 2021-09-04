@@ -9,7 +9,6 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("Home");
     if (!auth.loading) {
       auth.user ? router.push("/agenda") : router.push("/login");
     }
