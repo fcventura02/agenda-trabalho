@@ -34,10 +34,9 @@ interface IGetAgenda {
 export const AgendaComponent: NextPage = () => {
   const [when, setWhen] = useState(() => new Date());
   const [userName, setUserName] = useState("");
+  const [urlUser, setUrlUser] = useState("");
   const [dia, setDia] = useState("do dia");
-  const { hasCopied, onCopy } = useClipboard(
-    window?.location.host + "/" + userName
-  );
+  const { hasCopied, onCopy } = useClipboard(urlUser);
   const date = new Date();
   const getAgenda: IGetAgenda = async (when = new Date()) => {
     try {
@@ -68,6 +67,7 @@ export const AgendaComponent: NextPage = () => {
 
   useEffect(() => {
     fetch(when);
+    setUrlUser(window?.location.host + "/" + userName);
     if (date.getDate() > when.getDate()) {
       setDia("dos dia anteriores");
     } else if (date.getDate() < when.getDate()) {
