@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useAuth } from "../components";
+import { Footer, useAuth } from "../components";
 import { useEffect } from "react";
 import { useFormik } from "formik";
 import {
@@ -162,6 +162,7 @@ const Signup: NextPage = () => {
           <Link href="/">Já possui uma conta? Acesse.</Link>
         </Box>
       </Container>
+      <Footer />
     </>
   );
 };

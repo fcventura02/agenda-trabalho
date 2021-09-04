@@ -6,3 +6,4 @@ export * from "./Loading";
 export * from "./Header";
 export * from "./TimeBlock";
 export * from "./Input";
+export * from "./Footer";

@@ -3,7 +3,7 @@ import Head from "next/head";
 import { useFetch } from "@refetty/react";
 import { useEffect, useState } from "react";
 import { addDays, format, subDays } from "date-fns";
-import { formatDate, Header, TimeBlock } from "../components";
+import { Footer, formatDate, Header, TimeBlock } from "../components";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { Box, Container, IconButton, SimpleGrid } from "@chakra-ui/react";
 import { Loading } from "../components";
@@ -106,6 +106,7 @@ export default function Schedule() {
           )}
         </SimpleGrid>
       </Container>
+      <Footer />
     </>
   );
 }

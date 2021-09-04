@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { AgendaComponent, useAuth } from "../components";
+import { AgendaComponent, Footer, useAuth } from "../components";
 
 const Agenda: NextPage = () => {
   const [auth] = useAuth();
@@ -10,14 +10,15 @@ const Agenda: NextPage = () => {
 
   useEffect(() => {
     !auth.user && router.push("/");
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.user]);
-  return ( 
+  return (
     <>
       <Head>
         <title>Clocker | Agenda</title>
       </Head>
       <AgendaComponent />
+      <Footer />
     </>
   );
 };
