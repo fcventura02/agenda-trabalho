@@ -91,17 +91,20 @@ const Signup: NextPage = () => {
   return (
     <>
       <Container
-        maxW="960px"
+        maxW="100%"
         minH="100vh"
-        p={4}
+        pt={4}
+        pr={0}
+        pl={0}
+        display="flex"
         centerContent
-        justifyContent="center"
+        justifyContent="space-between"
       >
-        <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
-        <Box mt={12}>
-          <Text>Crie sua agenda compartilhada</Text>
+        <Box textAlign="center">
+          <Image src="/Logo.svg" alt="Vercel Logo" width={225} height={80} />
+          <Text mt={10}>Crie sua agenda compartilhada</Text>
         </Box>
-        <Box p={4} mt={12}>
+        <Box p={4} >
           <FormControl id="email" pt={4} pb={4} isRequired>
             <FormLabel>Email</FormLabel>
             <Input
@@ -157,12 +160,12 @@ const Signup: NextPage = () => {
           >
             Cadastrar
           </Button>
+          <Box mt={12} textAlign="center">
+            <Link href="/">Já possui uma conta? Acesse.</Link>
+          </Box>
         </Box>
-        <Box mt={12}>
-          <Link href="/">Já possui uma conta? Acesse.</Link>
-        </Box>
+        <Footer />
       </Container>
-      <Footer />
     </>
   );
 };

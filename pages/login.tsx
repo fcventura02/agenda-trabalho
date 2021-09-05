@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import { Footer, LoginComponent, useAuth } from "../components";
+import { LoginComponent, useAuth } from "../components";
 
 export default function Login() {
   const [auth] = useAuth();
@@ -17,7 +17,6 @@ export default function Login() {
         <title>Clocker | Login</title>
       </Head>
       <LoginComponent />
-      <Footer />
     </>
   );
 }

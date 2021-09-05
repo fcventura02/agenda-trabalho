@@ -16,6 +16,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAuth } from "../Auth";
+import { Footer } from "../Footer";
 
 const validationSchema = yup.object().shape({
   email: yup
@@ -43,7 +44,7 @@ export const LoginComponent: NextPage = () => {
     touched,
   } = useFormik({
     onSubmit: async (values) => {
-        await submitForm(values);
+      await submitForm(values);
     },
     initialValues: {
       email: "",
@@ -77,17 +78,20 @@ export const LoginComponent: NextPage = () => {
   return (
     <>
       <Container
-        maxW="960px"
+        maxW="100%"
         minH="100vh"
-        p={4}
+        pt={4}
+        pr={0}
+        pl={0}
+        display="flex"
         centerContent
-        justifyContent="center"
+        justifyContent="space-between"
       >
-        <Image src="/Logo.svg" alt="Vercel Logo" width={290} height={80} />
-        <Box mt={12}>
-          <Text>Crie sua agenda compartilhada</Text>
-        </Box>
-        <Box p={4} mt={12}>
+        <Container centerContent>
+          <Image src="/Logo.svg" alt="Vercel Logo" width={225} height={80} />
+          <Text mt={10}>Crie sua agenda compartilhada</Text>
+        </Container>
+        <Box p={4}>
           <FormControl id="email" pt={4} pb={4} isRequired>
             <FormLabel>Email</FormLabel>
             <Input
@@ -129,10 +133,11 @@ export const LoginComponent: NextPage = () => {
           >
             Entrar
           </Button>
+          <Box mt={12} textAlign="center">
+            <Link href="/signup">Ainda não tem uma conta? Cadastre-se.</Link>
+          </Box>
         </Box>
-        <Box mt={12}>
-          <Link href="/signup">Ainda não tem uma conta? Cadastre-se.</Link>
-        </Box>
+        <Footer />
       </Container>
     </>
   );
