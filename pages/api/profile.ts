@@ -6,7 +6,17 @@ const db = app.firestore();
 const profile = db.collection("profiles");
 
 const verifyUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const username = req.query.username;
+  const username = req.query.username.toString();
+  if (
+    !username ||
+    username.toLowerCase() === "agenda" ||
+    username.toLowerCase() === "login" ||
+    username.toLowerCase() === "signup" ||
+    username.toLowerCase() === "null" ||
+    username.toLowerCase() === "undefined"
+  ) {
+    return res.status(401).json({ error: "User name not permition" });
+  }
   const blocks = await profile.where("username", "==", username).get();
   if (!blocks.docs.length) {
     return res.status(200).json({ verify: "User not created" });

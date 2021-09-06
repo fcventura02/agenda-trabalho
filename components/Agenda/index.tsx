@@ -38,7 +38,7 @@ export const AgendaComponent: NextPage = () => {
   const [userName, setUserName] = useState("");
   const [valueCopy, setValueCopy] = useState("");
   const [dia, setDia] = useState("do dia");
-  const { hasCopied, onCopy } = useClipboard(valueCopy);
+  let { hasCopied, onCopy } = useClipboard(valueCopy);
   const [isMobile] = useMediaQuery("(min-width: 490px)");
   const [when, setWhen] = useState(() => new Date());
   const date = new Date();
@@ -73,6 +73,7 @@ export const AgendaComponent: NextPage = () => {
   useEffect(() => {
     fetch(when);
     setValueCopy(window?.location.host + "/" + userName);
+
     if (date.getDate() > when.getDate()) {
       setDia("dos dia anteriores");
     } else if (date.getDate() < when.getDate()) {
@@ -81,7 +82,7 @@ export const AgendaComponent: NextPage = () => {
       setDia("do dia");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [when]);
+  }, [when, userName]);
 
   const backDay = () => setWhen((prevState) => subDays(prevState, 1));
 

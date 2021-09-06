@@ -35,9 +35,27 @@ const Signup: NextPage = () => {
     email: yup
       .string()
       .email("E-mail inválido")
+      .trim()
       .required("Preenchimento Obrigatório"),
     password: yup.string().required("Preenchimento Obrigatório"),
-    user: yup.string().required("Preenchimento Obrigatório"),
+    user: yup
+      .string()
+      .min(3, "* Deve conter no mínimo 3 caracteres")
+      .required("Preenchimento Obrigatório")
+      .trim("Este campo não pode conter espaços antes ou depois")
+      .matches(/^(\S+$)/, "Este campo não pode conter espaços")
+      .matches(/^([A-Z0-9-a-z]+$)/, "Caracteres permitidos: - letras e números")
+      .test(
+        "teste-conjunto-caracteres",
+        "Conjunto de caracteres não permitido",
+        (username) =>
+          !username ||
+          (username.toLowerCase() !== "agenda" &&
+            username.toLowerCase() !== "login" &&
+            username.toLowerCase() !== "signup" &&
+            username.toLowerCase() !== "null" &&
+            username.toLowerCase() !== "undefined")
+      ),
   });
 
   const {
@@ -61,8 +79,12 @@ const Signup: NextPage = () => {
   });
 
   const submitForm = async (values: Values) => {
-    const user = await signup(values.email, values.password, values.user);
-
+    const user = await signup(
+      values.email,
+      values.password,
+      values.user.trim()
+    );
+    console.log(user);
     if (user?.message !== undefined) {
       return toast({
         position: "top",
@@ -104,7 +126,7 @@ const Signup: NextPage = () => {
           <Image src="/Logo.svg" alt="Vercel Logo" width={225} height={80} />
           <Text mt={10}>Crie sua agenda compartilhada</Text>
         </Box>
-        <Box p={4} >
+        <Box p={4}>
           <FormControl id="email" pt={4} pb={4} isRequired>
             <FormLabel>Email</FormLabel>
             <Input
