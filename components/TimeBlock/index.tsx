@@ -114,6 +114,8 @@ export const TimeBlock = ({ time, date, isDisabled, onSuccess }: Props) => {
       name: yup.string().required("Preenchimento obrigatório"),
       phone: yup
         .string()
+        .min(14, "Minimo 14 números")
+        .max(16, "Maximo 16 números")
         .required("Preenchimento obrigatório"),
     }),
   });
@@ -150,7 +152,9 @@ export const TimeBlock = ({ time, date, isDisabled, onSuccess }: Props) => {
             children="Telefone"
             name="phone"
             placeholder="(99) 9 9999-9999"
-            mask={['(99) 9 9999-9999', '(99) 9999-9999']}
+            mask={['(99) 9999-9999','(99) 9 9999-9999']}
+            min={10}
+            max={11}
             value={values.phone}
             error={errors.phone}
             onChange={handleChange}

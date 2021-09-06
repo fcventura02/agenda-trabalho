@@ -7,6 +7,7 @@ import {
   Input as InPutBase,
   FormHelperText,
 } from "@chakra-ui/react";
+import { Props } from "framer-motion/types/types";
 
 interface IInputProps {
   value: string;
@@ -34,7 +35,7 @@ export const Input = ({
   onBlur,
   mask: pattern,
   ...props
-}: IInputProps) => {
+}: Props | IInputProps) => {
   const handleChange = (event: any) => {
     if (!!pattern) {
       const unMaskedValue = unMask(event.target.value);
