@@ -1,34 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Clocker
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
 
-## Getting Started
+![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+[Teste o projeto](https://agenda-trabalho.vercel.app/login)
+[Teste o projeto: Agende um horário](agenda-trabalho.vercel.app/Venturadev)
 
-First, run the development server:
+## Projeto
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+Projeto realizado durante o workshop da codar.me, esse projeto foi trabalhado utilizando nextjs e firebase, sendo estudado tratamento de data, requests, rotas privadas e publicas.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## O que foi utilizado
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- firebase
+- firebase-admin
+- date-fns
+- formik
+- yup
+- chakra-ui
+- axios
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Preview
+![Login](https://user-images.githubusercontent.com/54460658/132593149-0f731485-8ffa-4fb2-8947-ebb3c21fd980.png)
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+![Criar Conta](https://user-images.githubusercontent.com/54460658/132593244-edc2e6d2-a76b-4976-bcbd-701d3d183568.png)
 
-## Learn More
+![Usuário logado](https://user-images.githubusercontent.com/54460658/132593656-5d4a708f-adfc-401a-840f-81920cab3dcf.png)
 
-To learn more about Next.js, take a look at the following resources:
+![Agendamento](https://user-images.githubusercontent.com/54460658/132593369-89e49640-adf0-431c-a045-e6548ccd2c6d.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+![Agendamento cliente](https://user-images.githubusercontent.com/54460658/132593481-a00ab31e-af8b-408d-851f-16a1c31fe59c.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Possíveis alterações
+- Adicionar uma página com listagem e procura de usuários;
+- Adicionar página para usuário adicionar um perfil;
